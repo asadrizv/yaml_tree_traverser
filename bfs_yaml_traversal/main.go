@@ -21,36 +21,10 @@ func main() {
 	fmt.Println("error could be at lines/line: ", errLine)
 }
 
-func filterPossibleLines ( possibleLines []int, referredNodes []string, LineDataMap map[string][]int) []int{
-	for i := len(referredNodes)-2; i >= 0; i-- {
-		predecessorLines := LineDataMap[referredNodes[i]]
-		for _, line := range predecessorLines{
-			for _, possibleLine := range possibleLines{
-				if possibleLine < line{
-					possibleLines = remove(possibleLines, possibleLine)
-				}
-				if len(possibleLines) == 1{
-					return possibleLines
-				}
-			}
-		}
-	}
-	return possibleLines
-}
-
-func remove(s []int, r int) []int {
-	for i, v := range s {
-		if v == r {
-			return append(s[:i], s[i+1:]...)
-		}
-	}
-	return s
-}
-
 func fetchLineNum(errString string, LineDataMap map[string][]int) []int {
 	referredNodes := strings.Split(errString, ".")
 	lastNodeData := LineDataMap[referredNodes[len(referredNodes)-1]]
-	if len(lastNodeData) > 1{
+	if len(lastNodeData) > 1 {
 		lastNodeData = filterPossibleLines(lastNodeData, referredNodes, LineDataMap)
 	}
 	return lastNodeData
@@ -91,4 +65,30 @@ func ParseLineData(fileName string) map[string][]int {
 
 	}
 	return LineNumMap
+}
+
+func filterPossibleLines(possibleLines []int, referredNodes []string, LineDataMap map[string][]int) []int {
+	for i := len(referredNodes) - 2; i >= 0; i-- {
+		predecessorLines := LineDataMap[referredNodes[i]]
+		for _, line := range predecessorLines {
+			for _, possibleLine := range possibleLines {
+				if possibleLine < line {
+					possibleLines = remove(possibleLines, possibleLine)
+				}
+				if len(possibleLines) == 1 {
+					return possibleLines
+				}
+			}
+		}
+	}
+	return possibleLines
+}
+
+func remove(s []int, r int) []int {
+	for i, v := range s {
+		if v == r {
+			return append(s[:i], s[i+1:]...)
+		}
+	}
+	return s
 }

@@ -1,25 +1,25 @@
-apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment
+  name: hello-kubernetes
+  labels:
+    app.kubernetes.io/name: mysql
+    app.kubernetes.io/version: "5.7.21"
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: wordpress
+    app.kubernetes.io/managed-by: helm
 spec:
+  replicas: 3
   selector:
     matchLabels:
-      app: redis
-  replicas: 1
+      app: hello-kubernetes
   template:
     metadata:
       labels:
-        app: redis
+        app: hello-kubernetes
     spec:
       containers:
-        - name: redis
-          image: redis
-          volumeMounts:
-            - name: vmfs-vmdk-storage
-              mountPath: /data/
-      volumes:
-        - name: vmfs-vmdk-storage
-          vsphereVolume:
-            volumePath: "[Datastore] volumes/testdir"
-            fsType: ext4
+        - name: hello-kubernetes
+          image: paulbouwer/hello-kubernetes:1.5
+          ports:
+            - containerPort: 8080

@@ -1,2 +1,2 @@
-# yaml_tree_traverser
-Sample code to iterate over the Parsed yaml file using BFS
+# Yaml error line detection
+A sample approach for manipulating and parsing yaml data based data for highlighting particular lines of text.
